@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Status } from "@prisma/client";
+import { createTaskSchema } from "@/lib/validators/task";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -9,13 +9,17 @@ export async function GET() {
 
 export async function POST(req: Request) {
     const body = await req.json()
+    const parsed = createTaskSchema.safeParse(body);
 
+    if (!parsed.success) {
+        return NextResponse.json(
+            { error: parsed.error.flatten() },
+            { status: 400 }
+
+        )
+    }
     const task = await prisma.task.create({
-        data: {
-            title: body.title,
-            content: body.content,
-            status: Status.TODO
-        },
+        data: parsed.data,
     })
 
     return NextResponse.json(task)

@@ -4,7 +4,7 @@ import SwaggerUI from 'swagger-ui-react'
 import 'swagger-ui-react/swagger-ui.css'
 
 export default function Page() {
-    return(
-        <SwaggerUI url="/openapi/openapi.yml"></SwaggerUI>
+    return (
+        <SwaggerUI url="/openapi/openapi.json"></SwaggerUI>
     )
 }
