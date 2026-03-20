@@ -1,17 +1,19 @@
 'use client';
 
 import { BASE_URL } from "@/lib/constants";
-import { useMemo, useState } from "react";
+import { Status } from "@prisma/client";
+import { useEffect, useState } from "react";
 
-type Tasks = {
+type Task = {
   id: number,
   title: string,
   content?: string,
+  status: Status,
 }
 
 export default function Page() {
   const [title, setTitle] = useState<string>('');
-  const [tasks, setTasks] = useState<Array<Tasks>>([]);
+  const [tasks, setTasks] = useState<Array<Task>>([]);
 
   const getTasks = async () => {
     const res = await fetch(`${BASE_URL}/tasks`);
@@ -27,7 +29,27 @@ export default function Page() {
     getTasks();
   };
 
-  useMemo(() => {
+  const updateTask = async (id: number, status: Status) => {
+    await fetch(`${BASE_URL}/tasks/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: status
+      })
+    })
+
+    getTasks();
+  }
+
+  const deleteTask = async (id: number) => {
+    await fetch(`${BASE_URL}/tasks/${id}`, {
+      method: 'DELETE',
+    })
+
+    getTasks()
+  }
+
+  useEffect(() => {
     getTasks();
   }, [])
 
@@ -38,7 +60,16 @@ export default function Page() {
 
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>{task.title}</li>
+          <div key={task.id}>
+            <li>{task.title}<span>{task.status}</span></li>
+            <select onChange={(e) => updateTask(task.id, e.target.value as Status)}>
+              <option value={Status.TODO}>TODO</option>
+              <option value={Status.DOING}>DOING</option>
+              <option value={Status.DONE}>DONE</option>
+
+            </select>
+            <button onClick={() => deleteTask(task.id)}>削除</button>
+          </div>
         ))}
       </ul>
     </div>

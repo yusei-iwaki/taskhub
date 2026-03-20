@@ -1,5 +1,6 @@
-import { prisma } from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma";
+import { Status } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 export async function GET() {
     const tasks = await prisma.task.findMany();
@@ -13,6 +14,7 @@ export async function POST(req: Request) {
         data: {
             title: body.title,
             content: body.content,
+            status: Status.TODO
         },
     })
 

@@ -12,11 +12,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  TODO
+  DOING
+  DONE
+}
+
 model Task {
   id        Int      @id @default(autoincrement())
   title     String
   content   String?
-  status    String   @default("TODO")
+  status    Status   @default(TODO)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
