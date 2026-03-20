@@ -1,0 +1,17 @@
+{
+    "name": "taskhub-dev",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/app",
+  
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "esbenp.prettier-vscode",
+          "prisma.prisma",
+          "dbaeumer.vscode-eslint"
+        ]
+      }
+    },
+    "remoteUser": "node"
+  }
